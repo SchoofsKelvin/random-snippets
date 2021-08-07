@@ -63,6 +63,55 @@ Example:
 ```
 I wrote this as part of [this Stack Overflow answer](https://stackoverflow.com/a/68606593/14274597).
 
+### [JS value parser](./src/js-value-parser.ts)
+Basically a custom version of a JSON deserialize that supports more JS-like syntax:
+- Don't need to wrap (JS variable name-like) object keys
+- Supports a lot more things than JSON does
+    - Supports octal (`0xabc`) and hexadecimal notation (`0o666`)
+    - Supports decimal and scientific notation (`.12e-3`)
+    - Supports `undefined` (not that impressive, but JSON only supports `null`, not `undefined`)
+- Pretty good error reporting
+    - Includes a demo to error report with a preview of where the syntax error happened
+    - For the preview part, got an easy version and an optimized-for-large-strings version
+- Can use my `_parseJSON` to parse a (finished) stream of JS values
+    - Can't actually "stream" bytes in and expect it to spit out objects
+    - Actually you could if you retry until you don't get an EOF error, but inefficient...
+    - More accurate to say "parse many values in a single string"
+
+Example:
+```js
+// Input string
+[
+    'newlines and such are fine btw',
+    
+    true, false, undefined, null,
+    {
+        a: 'hi', "b": 'ok', ["c"]: 'ooook',
+        [5]: { [[1, 2]]: .45e-2},
+    },
+    [{ nested: { data: [1e3, 2, 3.1415e+0, 0xcafebabe, 0o666] } }],
+]
+// Resulting object
+[
+  'newlines and such are fine btw',
+  true, false, undefined, null,
+  { '5': { '1,2': 0.0045 }, a: 'hi', b: 'ok', c: 'ooook' },
+  [ { nested: { data: [ 1000, 2, 3.1415, 3405691582, 438 ] } } ]
+]
+// Example output for same input but with `'ok'` replaced with ` 'not' ok`
+// and we use `pointAtCharacter` with `thrownError.index` for the preview:
+/*=================================
+Expected '}', ',' or ';' after value in object at 110 but got "o" instead:
+4|    true, false, undefined, null,
+5|    {
+6|        a: 'hi', "b":  'not' ok , ["c"]: 'ooook',
+                               ^
+7|        [5]: { [[1, 2]]: .45e-2},
+8|    },
+=================================*/
+```
+I wrote this as part of [this Stack Overflow answer](https://stackoverflow.com/a/68670117/14274597).
+
 ### [Static class stuff](./src/static-class-stuff.ts)
 Not much to say about this, it's quite old. Tried to do some fancy stuff where one class could extend another class **including static fields**. Eventually worked out that using a decorator kinda works, but actually never fully "finished" the whole thing.
 
