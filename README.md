@@ -22,6 +22,47 @@ node ./out/js-object-value-parser.ts # replace with wanted snippet
 ### [Index.ts](./src/index.ts)
 It's literally just a place holder to remind you `yarn start` etc is wrong.
 
+### [JS SQL query parser](./src/js-sql-query-parser.ts)
+Basically a parser that parses SQL-like queries, basically simple JS conditions:
+- Supports any binary operator with proper operator precedence
+- Supports wrapping an expression in brackets (to e.g. suppress operator precedence)
+- Supports parsing string/number/boolean constants
+- Supports accessing global variables
+- Supports indexing (anything) using any expression or `.field` syntax
+- Supports chaining operators and field indexes, e.g. `a.b && a.b['c'] === 1 + 2`
+
+Example:
+```js
+// Input expression (as a string)
+(section2.fieldxyz<5000 OR section2.fieldxyz>10000) AND section1.fieldabc == value1
+// Resulting JSON
+{
+    "type": "binop",
+    "operator": "AND",
+    "left": {
+        "type": "brackets",
+        "expr": { ... }
+    },
+    "right": {
+        "type": "binop",
+        "operator": "==",
+        "left": {
+            "type": "field",
+            "object": {
+                "type": "variable",
+                "name": "section1"
+            },
+            "field": "fieldabc"
+        },
+        "right": { ... }
+    }
+}
+// Converting JSON into an expression but wrapping binops in [...]
+// (square brackets are just to show off operator precedence works)
+=> [([[section2.fieldxyz < 5000] OR [section2.fieldxyz > 10000]]) AND [section1.fieldabc == value1]]
+```
+I wrote this as part of [this Stack Overflow answer](https://stackoverflow.com/a/68606593/14274597).
+
 ### [Static class stuff](./src/static-class-stuff.ts)
 Not much to say about this, it's quite old. Tried to do some fancy stuff where one class could extend another class **including static fields**. Eventually worked out that using a decorator kinda works, but actually never fully "finished" the whole thing.
 
