@@ -21,3 +21,9 @@ node ./out/js-object-value-parser.ts # replace with wanted snippet
 ## Overview
 ### [Index.ts](./src/index.ts)
 It's literally just a place holder to remind you `yarn start` etc is wrong.
+
+### [Static class stuff](./src/static-class-stuff.ts)
+Not much to say about this, it's quite old. Tried to do some fancy stuff where one class could extend another class **including static fields**. Eventually worked out that using a decorator kinda works, but actually never fully "finished" the whole thing.
+
+### [Multi class](./src/multi-class.ts)
+Similar to the previous one, this is also an old attempt at weird class stuff. Idea was to have one class extend multiple other classes, while supporting `instanceof` and such. Technically feasible using `Symbol.hasInstance` as shown (or just cheatingly using proxies), but never actually finished it.
