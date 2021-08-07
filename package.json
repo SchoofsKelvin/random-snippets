@@ -1,0 +1,39 @@
+{
+  "name": "random-snippets",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Random code snippets I wrote that I found interesting enough to publish",
+  "main": "out/index.js",
+  "scripts": {
+    "start": "node -r source-map-support/register out/index.js",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "update-default-dev": "npm i --save-dev typescript@latest @types/node@^10 source-map-support@latest"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Kelvin Schoofs",
+    "email": "schoofs.kelvin@gmail.com",
+    "url": "https://github.com/schoofskelvin"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/SchoofsKelvin/random-snippets"
+  },
+  "bugs": {
+      "url": "https://github.com/SchoofsKelvin/random-snippets/issues"
+  },
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@types/node": "^16.4.12",
+    "@types/node-fetch": "^2.5.12",
+    "source-map-support": "^0.5.19",
+    "typescript": "^4.3.5"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
